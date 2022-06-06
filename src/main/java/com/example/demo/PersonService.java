@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.Objects;
 import java.util.function.BiFunction;
 
 @Service
@@ -27,6 +28,20 @@ public class PersonService {
         return personMono
                 .flatMap(person -> validateBeforeInsert.apply(repository, person))
                 .switchIfEmpty(Mono.defer(() -> personMono.doOnNext(repository::save))).then();
+    }
+
+    public Mono delete(String id) {
+        final Mono<Person> person = getPerson(id);
+
+        if(Objects.isNull(person)) {
+            return Mono.empty();
+        }
+        return getPerson(id)
+                .switchIfEmpty(Mono.empty())
+                .filter(Objects::nonNull)
+                .flatMap(deletedPerson -> repository
+                        .delete(deletedPerson)
+                        .then(Mono.just(deletedPerson)));
     }
 
     public Mono<Void> insert(Mono<Person> personMono) {

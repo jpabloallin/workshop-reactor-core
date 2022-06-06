@@ -29,7 +29,7 @@ public class PersonController {
 
     @DeleteMapping("/{id}")
     public Mono<Void> delete(@PathVariable("id") String id) {
-        return Mono.empty();
+        return personService.delete(id);
     }
 
     @GetMapping
