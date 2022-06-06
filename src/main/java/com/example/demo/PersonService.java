@@ -2,6 +2,7 @@ package com.example.demo;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -16,6 +17,14 @@ public class PersonService {
 
     public Flux<Person> listAll() {
         return repository.findAll();
+    }
+
+    public Mono<Person> getPerson(String id) {
+        return repository.findById(id);
+    }
+
+    public Mono<Person> update(Person person) {
+        return repository.save(person);
     }
 
     public Mono<Void> insert(Mono<Person> personMono) {

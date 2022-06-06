@@ -19,7 +19,7 @@ public class PersonController {
 
     @GetMapping("/{id}")
     public Mono<Person> getPerson(@PathVariable("id") String id) {
-        return Mono.just(new Person());
+        return personService.getPerson(id);
     }
 
     @PutMapping
