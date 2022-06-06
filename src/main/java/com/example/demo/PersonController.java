@@ -24,7 +24,7 @@ public class PersonController {
 
     @PutMapping
     public Mono<Void> update(@RequestBody Mono<Person> personMono) {
-        return Mono.empty();
+        return personService.update(personMono);
     }
 
     @DeleteMapping("/{id}")

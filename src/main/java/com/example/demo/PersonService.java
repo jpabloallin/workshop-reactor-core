@@ -23,8 +23,10 @@ public class PersonService {
         return repository.findById(id);
     }
 
-    public Mono<Person> update(Person person) {
-        return repository.save(person);
+    public Mono<Void> update(Mono<Person> personMono) {
+        return personMono
+                .flatMap(person -> validateBeforeInsert.apply(repository, person))
+                .switchIfEmpty(Mono.defer(() -> personMono.doOnNext(repository::save))).then();
     }
 
     public Mono<Void> insert(Mono<Person> personMono) {
